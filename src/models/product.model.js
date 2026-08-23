@@ -52,9 +52,13 @@ const productSchema = new mongoose.Schema(
       },
       default: true,
     },
-    productImage: {
-      type: String,
-    },
+    productImages: [
+     { type: String}
+    ],
+    dealer:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'User'
+    }
   },
   { timestamps: true },
 );

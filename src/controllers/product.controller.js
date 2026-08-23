@@ -21,6 +21,7 @@ export const productAdd = async (req, res) => {
       rating,
       isAvailable,
     } = req.body;
+    const dealer = req.user?._id;
     const data = await ProductModal.create({
       name,
       description,
@@ -31,6 +32,7 @@ export const productAdd = async (req, res) => {
       stock,
       rating,
       isAvailable,
+      dealer,
     });
     if (!data) {
       return console.log("Error in product add");
@@ -168,7 +170,7 @@ export const productDelete = async (req, res) => {
       deleted_product: product,
     });
   } catch (error) {
-    console.log(`Error While Product Deletion:${error.message}`)
+    console.log(`Error While Product Deletion:${error.message}`);
     res.status(400).json({
       success: false,
       message: `Product delete Failed`,
@@ -176,32 +178,49 @@ export const productDelete = async (req, res) => {
   }
 };
 
-
-
-
 //---------------product image-------------
 
 export const productImage = async (req, res) => {
   try {
-    const cloudinary_folder='productImages'
-    const newProductImage=req.files?.productImage[0].path
-    const product=await ProductModal.findById(req.body?.productId)
-    console.log(newProductImage)
-    if(!product){
+    const cloudinary_folder = "productImages";
+    const newProductImage = req.files?.productImage[0].path;
+    const product = await ProductModal.findById(req.body?.productId);
+    console.log(newProductImage);
+    if (!product) {
       // console.log("No such product found by given id")
-      throw new ApiError(404,"Id not correct")
+      throw new ApiError(404, "Id not correct");
     }
-    const result= await uploadOnCludinary(newProductImage)
-    product.productImage=result.url
-    await product.save()
+    const result = await uploadOnCludinary(newProductImage, cloudinary_folder);
+    product.productImages.push(result.url);
+    await product.save();
     res.status(200).json({
-      success:true,
-      message:`product image updated successfully`
-    })
+      success: true,
+      message: `product image updated successfully`,
+    });
   } catch (error) {
     res.status(error?.statuCode || 401).json({
-        success:false,
-        message:`${error?.message}....Error in uploading product image`  || `No product found by given id`
-      })
+      success: false,
+      message:
+        `${error?.message}....Error in uploading product image` ||
+        `No product found by given id`,
+    });
   }
-}
+};
+
+// -----------My products-----------
+
+export const myProducts = async (req, res) => {
+  try {
+    const userId = req.user?._id;
+    const products = await ProductModal.find({ dealer: userId });
+    res.status(200).json({
+      message:`User Products retrived`,
+      products
+    })
+  } catch (error) {
+    res.statu(500).json({
+      success:false,
+      message: `Error while retriveing user products`
+    })
+  }
+};

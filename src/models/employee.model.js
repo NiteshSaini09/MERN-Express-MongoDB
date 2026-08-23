@@ -35,10 +35,8 @@ const employeeSchema = new mongoose.Schema(
       },
     },
     employeeId: {
-    type: String,
-    required: [true, 'Employee ID is required'],
-    unique: true,
-    trim: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'User'
   },
     role: {
       type: String,
