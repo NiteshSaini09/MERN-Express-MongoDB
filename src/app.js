@@ -2,7 +2,6 @@ import express from 'express'
 const app =express()
 import dotenv from 'dotenv'
 import { mongo } from 'mongoose'
-import { connectDB } from './db/connect.db.js'
 import userRoutes from './routes/user.routes.js'
 import productRoutes from './routes/product.routes.js'
 import { UserModel } from './models/user.model.js'
@@ -16,7 +15,6 @@ app.use(express.static('./src/public/temp'))
 
 // DataBase Connection
 
-connectDB();
 
 //routes
 app.use('/api/users',userRoutes)
@@ -30,6 +28,6 @@ app.get('/',(req,res)=>{
 
 
 //server
-app.listen(process.env.PORT,()=>{
-    console.log(`Server is running on Port ${process.env.PORT}`)
-})
+
+
+export {app}
