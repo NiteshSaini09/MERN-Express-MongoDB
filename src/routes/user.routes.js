@@ -31,5 +31,5 @@ router.route('/upload-coverImage').post(verifyJWT,upload.fields([{name:"coverIma
 router.route('/upload-assets').post(verifyJWT,upload.fields([{name:"assets",maxCount:5}]),userController.uploadAssets)
 
 
-
+    
 export default router

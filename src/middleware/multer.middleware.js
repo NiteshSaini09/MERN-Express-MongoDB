@@ -4,7 +4,7 @@ const storage=multer.diskStorage({
         cd(null,("./src/public/temp"))
     },
     filename:function(req,file,cd){
-        cd(null,file.originalname)
+        cd(null,file.originalname.replaceAll(" ","_").replaceAll(/\d+/g, ""))
     }
 })
 export const upload=multer({storage})
