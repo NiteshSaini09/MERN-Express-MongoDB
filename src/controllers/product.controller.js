@@ -1,7 +1,8 @@
 import { ProductModal } from "../models/product.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCludinary } from "../utils/uploadOnCloudinary.js";
-
+import dotenv from "dotenv"
+dotenv.config()
 export const home = async (req, res) => {
   res.send("I am product home");
 };
@@ -182,7 +183,7 @@ export const productDelete = async (req, res) => {
 
 export const productImage = async (req, res) => {
   try {
-    const cloudinary_folder = "productImages";
+    // const cloudinary_folder = "productImages";
     const newProductImage = req.files?.productImage[0].path;
     const product = await ProductModal.findById(req.body?.productId);
     console.log(newProductImage);
@@ -190,7 +191,7 @@ export const productImage = async (req, res) => {
       // console.log("No such product found by given id")
       throw new ApiError(404, "Id not correct");
     }
-    const result = await uploadOnCludinary(newProductImage, cloudinary_folder);
+    const result = await uploadOnCludinary(newProductImage, process.env.CLOUDINARY_FOLDER);
     product.productImages.push(result.url);
     await product.save();
     res.status(200).json({
