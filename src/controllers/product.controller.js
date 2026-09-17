@@ -188,7 +188,6 @@ export const productImage = async (req, res) => {
     const product = await ProductModal.findById(req.body?.productId);
     console.log(newProductImage);
     if (!product) {
-      // console.log("No such product found by given id")
       throw new ApiError(404, "Id not correct");
     }
     const result = await uploadOnCludinary(newProductImage, process.env.CLOUDINARY_FOLDER);
